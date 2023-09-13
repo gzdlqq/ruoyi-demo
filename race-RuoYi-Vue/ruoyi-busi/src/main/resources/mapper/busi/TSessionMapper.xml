@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.busi.mapper.TSessionMapper">
+
+    <resultMap type="TSession" id="TSessionResult">
+        <result property="id"    column="id"    />
+        <result property="competitionId"    column="competition_id"    />
+        <result property="sessionNo"    column="session_no"    />
+        <result property="roundNo"    column="round_no"    />
+        <result property="roundSessionNo"    column="round_session_no"    />
+        <result property="baseGameOver"    column="base_game_over"    />
+    </resultMap>
+
+    <sql id="selectTSessionVo">
+        select id, competition_id, session_no, round_no, round_session_no, base_game_over from t_session
+    </sql>
+
+    <select id="selectTSessionList" parameterType="TSession" resultMap="TSessionResult">
+        <include refid="selectTSessionVo"/>
+        <where>
+            <if test="competitionId != null "> and competition_id = #{competitionId}</if>
+            <if test="sessionNo != null "> and session_no = #{sessionNo}</if>
+            <if test="roundNo != null "> and round_no = #{roundNo}</if>
+            <if test="roundSessionNo != null "> and round_session_no = #{roundSessionNo}</if>
+            <if test="baseGameOver != null "> and base_game_over = #{baseGameOver}</if>
+        </where>
+    </select>
+
+    <select id="selectTSessionById" parameterType="Long" resultMap="TSessionResult">
+        <include refid="selectTSessionVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectTSessionByCompetitionId" resultType="com.ruoyi.busi.domain.TSession">
+        select id, competition_id, session_no, round_no, round_session_no, base_game_over from t_session
+        where competition_id = #{competitionId}
+
+    </select>
+
+    <insert id="insertTSession" parameterType="TSession" useGeneratedKeys="true" keyProperty="id">
+        insert into t_session
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="competitionId != null">competition_id,</if>
+            <if test="sessionNo != null">session_no,</if>
+            <if test="roundNo != null">round_no,</if>
+            <if test="roundSessionNo != null">round_session_no,</if>
+            <if test="baseGameOver != null">base_game_over,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="competitionId != null">#{competitionId},</if>
+            <if test="sessionNo != null">#{sessionNo},</if>
+            <if test="roundNo != null">#{roundNo},</if>
+            <if test="roundSessionNo != null">#{roundSessionNo},</if>
+            <if test="baseGameOver != null">#{baseGameOver},</if>
+         </trim>
+    </insert>
+    <insert id="saveBatch">
+        INSERT INTO t_session (
+        id,
+        competition_id,
+        session_no,
+        round_no,
+        round_session_no,
+        base_game_over
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.competitionId},
+            #{item.sessionNo},
+            #{item.roundNo},
+            #{item.roundSessionNo},
+            #{item.baseGameOver}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateTSession" parameterType="TSession">
+        update t_session
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="competitionId != null">competition_id = #{competitionId},</if>
+            <if test="sessionNo != null">session_no = #{sessionNo},</if>
+            <if test="roundNo != null">round_no = #{roundNo},</if>
+            <if test="roundSessionNo != null">round_session_no = #{roundSessionNo},</if>
+            <if test="baseGameOver != null">base_game_over = #{baseGameOver},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTSessionById" parameterType="Long">
+        delete from t_session where id = #{id}
+    </delete>
+
+    <delete id="deleteTSessionByIds" parameterType="String">
+        delete from t_session where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteTSessionByCompetitionId">
+        delete from t_session where competition_id = #{competitionId}
+    </delete>
+</mapper>

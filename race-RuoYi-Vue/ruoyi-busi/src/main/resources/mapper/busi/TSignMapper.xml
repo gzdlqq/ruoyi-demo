@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.busi.mapper.TSignMapper">
+
+    <resultMap type="TSign" id="TSignResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="playerName"    column="player_name"    />
+        <result property="competitionId"    column="competition_id"    />
+        <result property="competitionName"    column="competition_name"    />
+        <result property="signTime"    column="sign_time"    />
+        <result property="totalFee"    column="total_fee"    />
+        <result property="tradeNo"    column="trade_no"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectTSignVo">
+        select id, user_id, player_name, competition_id, competition_name, sign_time, total_fee, trade_no, status from t_sign
+    </sql>
+
+    <select id="selectTSignList" parameterType="TSign" resultMap="TSignResult">
+        <include refid="selectTSignVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="playerName != null  and playerName != ''"> and player_name like concat('%', #{playerName}, '%')</if>
+            <if test="competitionId != null "> and competition_id = #{competitionId}</if>
+            <if test="competitionName != null  and competitionName != ''"> and competition_name like concat('%', #{competitionName}, '%')</if>
+            <if test="signTime != null "> and sign_time = #{signTime}</if>
+            <if test="totalFee != null "> and total_fee = #{totalFee}</if>
+            <if test="tradeNo != null "> and trade_no = #{tradeNo}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectTSignById" parameterType="Long" resultMap="TSignResult">
+        <include refid="selectTSignVo"/>
+        where id = #{id}
+    </select>
+    <select id="queryMySign" resultType="com.ruoyi.busi.domain.resp.MySign">
+
+        select q.*,w.name,w.banner_url,w.description
+        from t_sign q left join t_competition w on q.competition_Id = w.id
+        where q.user_id = #{userId}
+
+    </select>
+    <select id="selectTSignByTradeNo" resultType="com.ruoyi.busi.domain.TSign">
+
+        <include refid="selectTSignVo"/>
+        where trade_no = #{tradeNo}
+    </select>
+    <select id="selectTSignListByCompetitionId" resultType="com.ruoyi.busi.domain.TSign">
+
+            <include refid="selectTSignVo"/>
+            where competition_id = #{competitionId} and status = '2'
+    </select>
+
+    <insert id="insertTSign" parameterType="TSign" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="playerName != null and playerName != ''">player_name,</if>
+            <if test="competitionId != null">competition_id,</if>
+            <if test="competitionName != null and competitionName != ''">competition_name,</if>
+            <if test="signTime != null">sign_time,</if>
+            <if test="totalFee != null">total_fee,</if>
+            <if test="tradeNo != null">trade_no,</if>
+            <if test="status != null and status != ''">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="playerName != null and playerName != ''">#{playerName},</if>
+            <if test="competitionId != null">#{competitionId},</if>
+            <if test="competitionName != null and competitionName != ''">#{competitionName},</if>
+            <if test="signTime != null">#{signTime},</if>
+            <if test="totalFee != null">#{totalFee},</if>
+            <if test="tradeNo != null">#{tradeNo},</if>
+            <if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTSign" parameterType="TSign">
+        update t_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="playerName != null and playerName != ''">player_name = #{playerName},</if>
+            <if test="competitionId != null">competition_id = #{competitionId},</if>
+            <if test="competitionName != null and competitionName != ''">competition_name = #{competitionName},</if>
+            <if test="signTime != null">sign_time = #{signTime},</if>
+            <if test="totalFee != null">total_fee = #{totalFee},</if>
+            <if test="tradeNo != null">trade_no = #{tradeNo},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTSignById" parameterType="Long">
+        delete from t_sign where id = #{id}
+    </delete>
+
+    <delete id="deleteTSignByIds" parameterType="String">
+        delete from t_sign where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

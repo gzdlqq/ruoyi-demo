@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.busi.mapper.TSessionDetailMapper">
+
+    <resultMap type="TSessionDetail" id="TSessionDetailResult">
+        <result property="id"    column="id"    />
+        <result property="competitionId"    column="competition_id"    />
+        <result property="sessionNo"    column="session_no"    />
+        <result property="roundNo"    column="round_no"    />
+        <result property="roundSessionNo"    column="round_session_no"    />
+        <result property="locationNo"    column="location_no"    />
+        <result property="nextRoundLocationNo"    column="next_round_location_no"    />
+        <result property="signId"    column="sign_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="baseGameOver"    column="base_game_over"    />
+        <result property="result"    column="result"    />
+    </resultMap>
+
+    <sql id="selectTSessionDetailVo">
+        select id, competition_id, session_no, round_no, round_session_no, location_no, next_round_location_no, sign_id, user_id, nickname, base_game_over, result from t_session_detail
+    </sql>
+
+    <select id="selectTSessionDetailList" parameterType="TSessionDetail" resultMap="TSessionDetailResult">
+        <include refid="selectTSessionDetailVo"/>
+        <where>
+            <if test="competitionId != null "> and competition_id = #{competitionId}</if>
+            <if test="sessionNo != null "> and session_no = #{sessionNo}</if>
+            <if test="roundNo != null "> and round_no = #{roundNo}</if>
+            <if test="roundSessionNo != null "> and round_session_no = #{roundSessionNo}</if>
+            <if test="locationNo != null "> and location_no = #{locationNo}</if>
+            <if test="nextRoundLocationNo != null "> and next_round_location_no = #{nextRoundLocationNo}</if>
+            <if test="signId != null "> and sign_id = #{signId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="baseGameOver != null "> and base_game_over = #{baseGameOver}</if>
+            <if test="result != null "> and result = #{result}</if>
+        </where>
+    </select>
+
+    <select id="selectTSessionDetailById" parameterType="Long" resultMap="TSessionDetailResult">
+        <include refid="selectTSessionDetailVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectTSessionDetailByCompetitionId" resultType="com.ruoyi.busi.domain.TSessionDetail">
+        select * from t_session_detail where competition_id = #{competitionId}
+    </select>
+
+    <insert id="insertTSessionDetail" parameterType="TSessionDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into t_session_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="competitionId != null">competition_id,</if>
+            <if test="sessionNo != null">session_no,</if>
+            <if test="roundNo != null">round_no,</if>
+            <if test="roundSessionNo != null">round_session_no,</if>
+            <if test="locationNo != null">location_no,</if>
+            <if test="nextRoundLocationNo != null">next_round_location_no,</if>
+            <if test="signId != null">sign_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="baseGameOver != null">base_game_over,</if>
+            <if test="result != null">result,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="competitionId != null">#{competitionId},</if>
+            <if test="sessionNo != null">#{sessionNo},</if>
+            <if test="roundNo != null">#{roundNo},</if>
+            <if test="roundSessionNo != null">#{roundSessionNo},</if>
+            <if test="locationNo != null">#{locationNo},</if>
+            <if test="nextRoundLocationNo != null">#{nextRoundLocationNo},</if>
+            <if test="signId != null">#{signId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="baseGameOver != null">#{baseGameOver},</if>
+            <if test="result != null">#{result},</if>
+         </trim>
+    </insert>
+    <insert id="saveBatch">
+        INSERT INTO t_session_detail (
+        id,
+        competition_id,
+        session_id,
+        session_no,
+        round_no,
+        round_session_no,
+        location_no,
+        next_round_location_no,
+        sign_id,
+        user_id,
+        nickname,
+        base_game_over,
+        result,
+        left_or_right,
+        faker
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.competitionId},
+            #{item.sessionId},
+            #{item.sessionNo},
+            #{item.roundNo},
+            #{item.roundSessionNo},
+            #{item.locationNo},
+            #{item.nextRoundLocationNo},
+            #{item.signId},
+            #{item.userId},
+            #{item.nickname},
+            #{item.baseGameOver},
+            #{item.result},
+            #{item.leftOrRight},
+            #{item.faker}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateTSessionDetail" parameterType="TSessionDetail">
+        update t_session_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="competitionId != null">competition_id = #{competitionId},</if>
+            <if test="sessionNo != null">session_no = #{sessionNo},</if>
+            <if test="roundNo != null">round_no = #{roundNo},</if>
+            <if test="roundSessionNo != null">round_session_no = #{roundSessionNo},</if>
+            <if test="locationNo != null">location_no = #{locationNo},</if>
+            <if test="nextRoundLocationNo != null">next_round_location_no = #{nextRoundLocationNo},</if>
+            <if test="signId != null">sign_id = #{signId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="baseGameOver != null">base_game_over = #{baseGameOver},</if>
+            <if test="result != null">result = #{result},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTSessionDetailById" parameterType="Long">
+        delete from t_session_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteTSessionDetailByIds" parameterType="String">
+        delete from t_session_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteTSessionDetailByCompetitionId">
+        delete from t_session_detail where competition_id = #{competitionId}
+    </delete>
+</mapper>

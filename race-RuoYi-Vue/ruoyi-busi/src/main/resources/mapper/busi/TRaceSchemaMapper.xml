@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.busi.mapper.TRaceSchemaMapper">
+    
+    <resultMap type="TRaceSchema" id="TRaceSchemaResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="format"    column="format"    />
+        <result property="price"    column="price"    />
+    </resultMap>
+
+    <sql id="selectTRaceSchemaVo">
+        select id, name, format, price from t_race_schema
+    </sql>
+
+    <select id="selectTRaceSchemaList" parameterType="TRaceSchema" resultMap="TRaceSchemaResult">
+        <include refid="selectTRaceSchemaVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="format != null  and format != ''"> and format = #{format}</if>
+            <if test="price != null "> and price = #{price}</if>
+        </where>
+    </select>
+    
+    <select id="selectTRaceSchemaById" parameterType="Long" resultMap="TRaceSchemaResult">
+        <include refid="selectTRaceSchemaVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTRaceSchema" parameterType="TRaceSchema" useGeneratedKeys="true" keyProperty="id">
+        insert into t_race_schema
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="format != null and format != ''">format,</if>
+            <if test="price != null">price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="format != null and format != ''">#{format},</if>
+            <if test="price != null">#{price},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTRaceSchema" parameterType="TRaceSchema">
+        update t_race_schema
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="format != null and format != ''">format = #{format},</if>
+            <if test="price != null">price = #{price},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTRaceSchemaById" parameterType="Long">
+        delete from t_race_schema where id = #{id}
+    </delete>
+
+    <delete id="deleteTRaceSchemaByIds" parameterType="String">
+        delete from t_race_schema where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "json-bigint": "^1.0.0",
+    "qqmap-wx-jssdk": "^1.0.0"
+  }
+}

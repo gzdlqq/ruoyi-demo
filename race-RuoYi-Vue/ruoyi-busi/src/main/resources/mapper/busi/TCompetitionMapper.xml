@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.busi.mapper.TCompetitionMapper">
+
+    <resultMap type="TCompetition" id="TCompetitionResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="registrationStartTime"    column="registration_start_time"    />
+        <result property="registrationEndTime"    column="registration_end_time"    />
+        <result property="bannerUrl"    column="banner_url"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="estimatedEndTime"    column="estimated_end_time"    />
+        <result property="baseEnd"    column="base_end"    />
+        <result property="description"    column="description"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="basePublished"    column="base_published"    />
+        <result property="sort"    column="sort"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="raceSchemaId"    column="race_schema_id"    />
+        <result property="baseBianpai"    column="base_bianpai"    />
+    </resultMap>
+
+    <sql id="selectTCompetitionVo">
+        select id,race_schema_id, name, registration_start_time, registration_end_time, banner_url, start_time, estimated_end_time, base_end, description, longitude, latitude, base_published, sort, del_flag, create_by, create_time, update_by, update_time,base_bianpai from t_competition
+    </sql>
+
+    <select id="selectTCompetitionList" parameterType="TCompetition" resultMap="TCompetitionResult">
+        <include refid="selectTCompetitionVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="registrationStartTime != null "> and registration_start_time &gt;= #{registrationStartTime}</if>
+            <if test="registrationEndTime != null "> and registration_end_time &lt; #{registrationEndTime}</if>
+            <if test="startTime != null "> and start_time &gt;= #{startTime}</if>
+            <if test="estimatedEndTime != null "> and estimated_end_time &lt; #{estimatedEndTime}</if>
+            <if test="baseEnd != null  and baseEnd != ''"> and base_end = #{baseEnd}</if>
+            <if test="basePublished != null  and basePublished != ''"> and base_published = #{basePublished}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectTCompetitionById" parameterType="Long" resultMap="TCompetitionResult">
+        <include refid="selectTCompetitionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTCompetition" parameterType="TCompetition" useGeneratedKeys="true" keyProperty="id">
+        insert into t_competition
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="registrationStartTime != null">registration_start_time,</if>
+            <if test="registrationEndTime != null">registration_end_time,</if>
+            <if test="bannerUrl != null">banner_url,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="estimatedEndTime != null">estimated_end_time,</if>
+            <if test="baseEnd != null and baseEnd != ''">base_end,</if>
+            <if test="description != null">description,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="basePublished != null and basePublished != ''">base_published,</if>
+            <if test="sort != null">sort,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="registrationStartTime != null">#{registrationStartTime},</if>
+            <if test="registrationEndTime != null">#{registrationEndTime},</if>
+            <if test="bannerUrl != null">#{bannerUrl},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="estimatedEndTime != null">#{estimatedEndTime},</if>
+            <if test="baseEnd != null and baseEnd != ''">#{baseEnd},</if>
+            <if test="description != null">#{description},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="basePublished != null and basePublished != ''">#{basePublished},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTCompetition" parameterType="TCompetition">
+        update t_competition
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="registrationStartTime != null">registration_start_time = #{registrationStartTime},</if>
+            <if test="registrationEndTime != null">registration_end_time = #{registrationEndTime},</if>
+            <if test="bannerUrl != null">banner_url = #{bannerUrl},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="estimatedEndTime != null">estimated_end_time = #{estimatedEndTime},</if>
+            <if test="baseEnd != null and baseEnd != ''">base_end = #{baseEnd},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="basePublished != null and basePublished != ''">base_published = #{basePublished},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="raceSchemaId != null">race_schema_id = #{raceSchemaId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTCompetitionById" parameterType="Long">
+        delete from t_competition where id = #{id}
+    </delete>
+
+    <delete id="deleteTCompetitionByIds" parameterType="String">
+        delete from t_competition where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
